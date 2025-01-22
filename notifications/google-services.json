@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "532015254645",
+    "project_id": "shiftstart-notifications",
+    "storage_bucket": "shiftstart-notifications.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:532015254645:android:00c440482bc44f157a7c3c",
+        "android_client_info": {
+          "package_name": "com.shiftstart.flutterapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxHRStodgmAItedFOl3VGa_EJsxtyUqEU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
