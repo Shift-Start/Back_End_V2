@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'team',
     'schedule',
     'rest_framework.authtoken',
-    'notifications'
+    'notifications',
+    'recommendations'
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -103,6 +104,13 @@ WSGI_APPLICATION = 'project.wsgi.application'
 #                     }
 #     }
 # }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.dummy',  # تمويه أن لا يوجد قاعدة بيانات SQL
+        'NAME': 'dummy',  # لا تستخدم هذه القيمة
+    }
+}
+
 CORS_ALLOW_ALL_ORIGINS = True
 
 from pymongo import MongoClient
