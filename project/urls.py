@@ -9,6 +9,8 @@ urlpatterns = [
     path('habit/', include('habit.urls')),
     path('team/', include('team.urls')),
     path('notifications/', include('notifications.urls')),
+    path('recommendations/', include('recommendations.urls')),
+    path('rewards/', include('rewards.urls')),
 
 ]
 
