@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'schedule',
     'rest_framework.authtoken',
     'notifications',
-    'recommendations'
+    'recommendations',
+    'rewards'
 ]
 
 CORS_ALLOWED_ORIGINS = [
