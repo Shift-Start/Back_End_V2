@@ -62,3 +62,30 @@ class RewardDeleteView(APIView):
             return Response({"message": "Reward deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
         except ValueError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+# تحديث التقدم نحو المكافآت
+class RewardProgressUpdateView(APIView):
+    def post(self, request):
+        user_id = request.data.get('user_id')
+        points_earned = request.data.get('points_earned')
+
+        # تحقق من البيانات المدخلة
+        if not user_id or points_earned is None:
+            return Response({"error": "user_id and points_earned are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # تحديث النقاط والمكافآت للمستخدم
+            Reward.update_points_and_rewards(user_id, points_earned)
+
+            # جلب المكافآت المحدثة
+            updated_rewards = Reward.collection.find({"user_id": user_id})
+            reward_list = [
+                {
+                    **reward,
+                    "_id": str(reward["_id"])  # تحويل ObjectId إلى نص
+                }
+                for reward in updated_rewards
+            ]
+            return Response(reward_list, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

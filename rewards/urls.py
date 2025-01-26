@@ -2,7 +2,8 @@ from django.urls import path
 from .views import (
     RewardListCreateView,
     RewardUpdateView,
-    RewardDeleteView
+    RewardDeleteView,
+    RewardProgressUpdateView
 )
 
 urlpatterns = [
@@ -14,4 +15,8 @@ urlpatterns = [
 
     # حذف مكافأة معينة
     path('rewards/<str:reward_id>/delete/', RewardDeleteView.as_view(), name='reward-delete'),
+
+    # تحديث التقدم نحو المكافآت
+    path('rewards/progress/', RewardProgressUpdateView.as_view(), name='reward-progress-update'),
+
 ]

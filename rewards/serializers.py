@@ -19,7 +19,6 @@ class RewardSerializer(serializers.Serializer):
             raise serializers.ValidationError("Points required must be greater than zero.")
         return value
 
-
     def validate_reward_name(self, value):
         if value.isdigit():
             raise serializers.ValidationError("Reward name cannot contain only numbers.")
