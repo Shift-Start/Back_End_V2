@@ -20,72 +20,59 @@ def convert_object_id_to_string(data):
                 convert_object_id_to_string(value)
     return data
 
-# عرض وإنشاء المكافآت
-class RewardListCreateView(APIView):
+class RewardCreateView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
         data = request.data
+        name = data.get("name")
+        description = data.get("description")
+        points_required = data.get("points_required")
+
+        if not name or not points_required:
+            return Response({"error": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
         try:
-            created_reward = Reward.add_reward(data)
-            created_reward = convert_object_id_to_string(created_reward)
-            return Response(created_reward, status=status.HTTP_201_CREATED)
-        except ValueError as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            Reward.create_reward(name, description, points_required)
+            return Response({"message": "Reward created successfully"}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    def get(self, request):
-        rewards = Reward.collection.find()
-        reward_list = [convert_object_id_to_string(reward) for reward in rewards]
-        return Response(reward_list, status=status.HTTP_200_OK)
-
-# تحديث المكافآت
 class RewardUpdateView(APIView):
     permission_classes = [AllowAny]
 
     def put(self, request, reward_id):
         data = request.data
+        name = data.get("name")
+        description = data.get("description")
+        points_required = data.get("points_required")
+
         try:
-            Reward.update_reward(ObjectId(reward_id), data)
-            updated_reward = Reward.collection.find_one({"_id": ObjectId(reward_id)})
-            updated_reward = convert_object_id_to_string(updated_reward)
-            return Response(updated_reward, status=status.HTTP_200_OK)
+            Reward.update_reward(reward_id, name, description, points_required)
+            return Response({"message": "Reward updated successfully"}, status=status.HTTP_200_OK)
         except ValueError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-# حذف المكافآت
 class RewardDeleteView(APIView):
     permission_classes = [AllowAny]
-    
+
     def delete(self, request, reward_id):
         try:
-            Reward.delete_reward(ObjectId(reward_id))
+            Reward.delete_reward(reward_id)
             return Response({"message": "Reward deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
         except ValueError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-# تحديث التقدم نحو المكافآت
-class RewardProgressUpdateView(APIView):
-    def post(self, request):
-        user_id = request.data.get('user_id')
-        points_earned = request.data.get('points_earned')
+class RewardListView(APIView):
+    permission_classes = [AllowAny]
 
-        # تحقق من البيانات المدخلة
-        if not user_id or points_earned is None:
-            return Response({"error": "user_id and points_earned are required"}, status=status.HTTP_400_BAD_REQUEST)
-
+    def get(self, request):
         try:
-            # تحديث النقاط والمكافآت للمستخدم
-            Reward.update_points_and_rewards(user_id, points_earned)
-
-            # جلب المكافآت المحدثة
-            updated_rewards = Reward.collection.find({"user_id": user_id})
-            reward_list = [
-                {
-                    **reward,
-                    "_id": str(reward["_id"])  # تحويل ObjectId إلى نص
-                }
-                for reward in updated_rewards
-            ]
-            return Response(reward_list, status=status.HTTP_200_OK)
+            rewards = Reward.list_rewards()
+            return Response({"rewards": rewards}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
