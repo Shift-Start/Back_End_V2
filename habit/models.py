@@ -1,7 +1,10 @@
 from pymongo import MongoClient
 from datetime import datetime
+<<<<<<< HEAD
 from bson import ObjectId
 
+=======
+>>>>>>> 769b9b4 (Add user features)
 
 client = MongoClient("mongodb://127.0.0.1:27017/")
 db = client['Shift-Start-db']
@@ -17,12 +20,17 @@ class Habit:
             data['start_date'] = datetime.combine(data['start_date'], datetime.min.time())
         if 'end_date' in data:
             data['end_date'] = datetime.combine(data['end_date'], datetime.min.time())
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> 769b9b4 (Add user features)
         data['created_at'] = datetime.utcnow()
         data['updated_at'] = datetime.utcnow()
         Habit.collection.insert_one(data)
         return data
 
+<<<<<<< HEAD
     @staticmethod
     def get_habit_by_id(habit_id):
         return Habit.collection.find_one({"_id": ObjectId(habit_id)})
@@ -67,3 +75,5 @@ class Challenge:
     @staticmethod
     def delete_challenge(challenge_id):
         Challenge.collection.delete_one({"_id": ObjectId(challenge_id)})
+=======
+>>>>>>> 769b9b4 (Add user features)

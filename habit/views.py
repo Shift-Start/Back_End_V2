@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from bson import ObjectId
+<<<<<<< HEAD
 from habit.models import Habit ,Challenge  # نستورد الكلاس الخاص بالموديل
 from habit.serializers import HabitSerializer  # نستورد السيريالايزر
 from rest_framework.permissions import AllowAny
@@ -40,17 +41,33 @@ class HabitListCreateView(APIView):
             habit_data['status_color'] = habit_status_color
             serialized_habits.append(habit_data)
 
+=======
+from habit.models import Habit  # نستورد الكلاس الخاص بالموديل
+from habit.serializers import HabitSerializer  # نستورد السيريالايزر
+
+class HabitListCreateView(APIView):
+    """
+    عرض جميع العادات أو إنشاء عادة جديدة
+    """
+    def get(self, request):
+        habits = Habit.collection.find()
+        serialized_habits = [HabitSerializer(habit).data for habit in habits]
+>>>>>>> 769b9b4 (Add user features)
         return Response(serialized_habits, status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = HabitSerializer(data=request.data)
         if serializer.is_valid():
+<<<<<<< HEAD
             # إنشاء العادة باستخدام البيانات المرسلة
+=======
+>>>>>>> 769b9b4 (Add user features)
             Habit.create_habit(serializer.validated_data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+<<<<<<< HEAD
 
 class DailyUpdatesView(APIView):
     permission_classes = [AllowAny]
@@ -115,6 +132,11 @@ class HabitDetailView(APIView):
     permission_classes = [AllowAny]
     """
     عرض تقدم المستخدم وإحصائيات العادة مع وظائف تعديل وحذف.
+=======
+class HabitDetailView(APIView):
+    """
+    عرض، تعديل أو حذف عادة بناءً على الـ ID
+>>>>>>> 769b9b4 (Add user features)
     """
     def get_object(self, habit_id):
         habit = Habit.collection.find_one({"_id": ObjectId(habit_id)})
@@ -126,6 +148,7 @@ class HabitDetailView(APIView):
         habit = self.get_object(habit_id)
         if not habit:
             return Response({"error": "Habit not found"}, status=status.HTTP_404_NOT_FOUND)
+<<<<<<< HEAD
 
         # حساب نسبة الإنجاز
         total_days = (habit['end_date'] - habit['start_date']).days + 1
@@ -150,6 +173,9 @@ class HabitDetailView(APIView):
         serialized_habit['total_days'] = total_days
         serialized_habit['motivational_message'] = motivational_message
 
+=======
+        serialized_habit = HabitSerializer(habit).data
+>>>>>>> 769b9b4 (Add user features)
         return Response(serialized_habit, status=status.HTTP_200_OK)
 
     def put(self, request, habit_id):
@@ -159,7 +185,11 @@ class HabitDetailView(APIView):
         serializer = HabitSerializer(data=request.data)
         if serializer.is_valid():
             Habit.update_habit(ObjectId(habit_id), serializer.validated_data)
+<<<<<<< HEAD
             return Response({"message": "Habit updated successfully", "data": serializer.data}, status=status.HTTP_200_OK)
+=======
+            return Response(serializer.data, status=status.HTTP_200_OK)
+>>>>>>> 769b9b4 (Add user features)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, habit_id):
@@ -168,6 +198,7 @@ class HabitDetailView(APIView):
             return Response({"error": "Habit not found"}, status=status.HTTP_404_NOT_FOUND)
         Habit.delete_habit(ObjectId(habit_id))
         return Response({"message": "Habit deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+<<<<<<< HEAD
 
 
 class HabitInteractionView(APIView):
@@ -352,3 +383,5 @@ class PuzzleProgressView(APIView):
 
 
 
+=======
+>>>>>>> 769b9b4 (Add user features)
