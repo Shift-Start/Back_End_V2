@@ -32,3 +32,14 @@ class Recommendation:
             return result
         except PyMongoError as e:
             raise RuntimeError(f"Failed to retrieve recommendations: {e}")
+
+    @staticmethod
+    def delete_recommendation(recommendation_id):
+        try:
+            result = Recommendation.collection.delete_one({"_id": ObjectId(recommendation_id)})
+            return result.deleted_count > 0  # إرجاع True إذا تم الحذف بنجاح، وإلا False
+        except PyMongoError as e:
+            raise RuntimeError(f"Failed to delete recommendation: {e}")
+        except Exception:
+            return False  # التعامل مع الأخطاء مثل فشل تحويل ObjectId
+
