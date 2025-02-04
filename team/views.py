@@ -264,7 +264,7 @@ class TeamTasksByTeamView(APIView):
                 {"error": f"Failed to fetch tasks: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
+# استرجاع المهام المستندة الى المستخدم عن طريق user id
 class UserAssignedTasksView(APIView):
     permission_classes = [AllowAny]
 
@@ -281,6 +281,7 @@ class UserAssignedTasksView(APIView):
 
         return Response(updated_tasks, status=status.HTTP_200_OK)
 
+#استرجاع الفرق التي انضم اليها المستخدم عن طريق user id
 class UserTeamsView(APIView):
     permission_classes = [AllowAny]
 
@@ -290,3 +291,14 @@ class UserTeamsView(APIView):
             return Response({"message": "User is not part of any team."}, status=status.HTTP_404_NOT_FOUND)
 
         return Response({"teams": teams}, status=status.HTTP_200_OK)
+
+        #  جلب جميع الفرق التي قام المستخدم بإنشائها
+class UserCreatedTeamsView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, user_id):
+        teams = TeamMember.get_created_teams_by_user_id(user_id)
+        if not teams:
+            return Response({"message": "User has not created any teams."}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({"created_teams": teams}, status=status.HTTP_200_OK)

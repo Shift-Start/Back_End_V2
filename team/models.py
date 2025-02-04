@@ -2,7 +2,8 @@ from django.db import models
 from bson import ObjectId
 from pymongo import MongoClient
 from datetime import datetime
-# from .models import TeamMember
+from bson import ObjectId
+
 
 client = MongoClient("mongodb://127.0.0.1:27017/")
 db = client['Shift-Start-db']
@@ -41,7 +42,7 @@ class TeamMember:
 
     @staticmethod
     def get_teams_by_user_id(user_id):
-        """ جلب جميع الفرق التي ينتمي إليها المستخدم """
+        #  جلب جميع الفرق التي ينتمي إليها المستخدم
         teams = TeamMember.collection.find({"user_id": user_id}, {"team_id": 1, "_id": 0})
         return list(teams)
 
@@ -78,6 +79,7 @@ class Team:
         # حذف الفريق نفسه
         result = Team.collection.delete_one({"_id": ObjectId(team_id)})
         print(f"Team deleted: {result.deleted_count > 0}")  # تأكيد حذف الفريق
+
 
 class TeamTask:
     collection = db['team_tasks']
@@ -141,3 +143,15 @@ class TeamTask:
     def get_all_tasks():
         tasks = TeamTask.collection.find()
         return [dict(task) for task in tasks]
+
+class TeamMember:
+    collection = db['team_members']
+    teams_collection = db['teams']
+    @staticmethod
+    def get_created_teams_by_user_id(user_id):
+        #  جلب جميع الفرق التي أنشأها المستخدم
+        teams = TeamMember.teams_collection.find({"admin_id": user_id}, {"_id": 1, "name": 1})
+
+        # تحويل ObjectId إلى string لتجنب الخطأ
+        return [{"_id": str(team["_id"]), "name": team["name"]} for team in teams]
+
