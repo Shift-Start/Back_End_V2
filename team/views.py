@@ -281,3 +281,12 @@ class UserAssignedTasksView(APIView):
 
         return Response(updated_tasks, status=status.HTTP_200_OK)
 
+class UserTeamsView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, user_id):
+        teams = TeamMember.get_teams_by_user_id(user_id)
+        if not teams:
+            return Response({"message": "User is not part of any team."}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({"teams": teams}, status=status.HTTP_200_OK)

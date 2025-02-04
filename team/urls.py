@@ -11,7 +11,8 @@ from team.views import (
     TeamTaskUpdateView,
     TeamTaskDeleteView,
     MemberTaskListView,
-    UserAssignedTasksView
+    UserAssignedTasksView,
+    UserTeamsView
 
 )
 
@@ -34,6 +35,8 @@ urlpatterns = [
     path('team-members/<str:member_id>/tasks/', MemberTaskListView.as_view(), name='member-task-list'),
     #         عرض جميع التاسكات المسندة لمستخدم معين عن طريق user id
     path('user-tasks/<str:user_id>/', UserAssignedTasksView.as_view(), name='user-assigned-tasks'),
+    #      عرض جميع الفرق المشترك بها مستخدم معين
+    path('user-teams/<str:user_id>/', UserTeamsView.as_view(), name='user-teams'),
 
 ]
 

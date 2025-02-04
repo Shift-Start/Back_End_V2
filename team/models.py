@@ -39,6 +39,12 @@ class TeamMember:
         print(f"Deleted {result.deleted_count} members for team_id: {team_id}")  # طباعة عدد الأعضاء المحذوفين
         return result.deleted_count
 
+    @staticmethod
+    def get_teams_by_user_id(user_id):
+        """ جلب جميع الفرق التي ينتمي إليها المستخدم """
+        teams = TeamMember.collection.find({"user_id": user_id}, {"team_id": 1, "_id": 0})
+        return list(teams)
+
 # جدول الفريق (Team)
 class Team:
     collection = db['teams']
