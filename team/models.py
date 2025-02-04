@@ -95,6 +95,17 @@ class TeamTask:
         except Exception as e:
             raise ValueError(f"Error while creating task: {e}")
 
+# //////////////////////////////////////////
+    @staticmethod
+    def get_tasks_by_assigned_member(assigned_member_id):
+        # إرجاع كافة المهام التي تم إسنادها لهذا المستخدم
+        return list(TeamTask.collection.find({"assigned_member_id": assigned_member_id}))
+
+    @staticmethod
+    def update_task_user_id(task_id, user_id):
+        #  تحديث المهمة بحيث يصبح user_id مطابقًا لـ assigned_member_id
+        TeamTask.collection.update_one({"_id": task_id}, {"$set": {"user_id": user_id}})
+
     @staticmethod
     def get_task_by_id(task_id):
         try:

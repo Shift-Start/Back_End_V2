@@ -264,3 +264,20 @@ class TeamTasksByTeamView(APIView):
                 {"error": f"Failed to fetch tasks: {str(e)}"},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+class UserAssignedTasksView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, user_id):
+        # البحث عن المهام التي تحتوي على assigned_member_id بدلاً من user_id
+        tasks = TeamTask.get_tasks_by_assigned_member(user_id)
+
+        # تحديث المهام بحيث يصبح user_id = assigned_member_id
+        updated_tasks = []
+        for task in tasks:
+            task["user_id"] = task["assigned_member_id"]  # تخزين assigned_member_id في user_id
+            TeamTask.update_task_user_id(task["_id"], task["user_id"])  # تحديث في قاعدة البيانات
+            updated_tasks.append(convert_object_id_to_string(task))
+
+        return Response(updated_tasks, status=status.HTTP_200_OK)
+

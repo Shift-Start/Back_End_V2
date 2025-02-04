@@ -11,6 +11,8 @@ from team.views import (
     TeamTaskUpdateView,
     TeamTaskDeleteView,
     MemberTaskListView,
+    UserAssignedTasksView
+
 )
 
 urlpatterns = [
@@ -30,6 +32,8 @@ urlpatterns = [
     path('teams/<str:team_id>/tasks/', TeamTasksByTeamView.as_view(), name='team-tasks-by-team'),
     #             عرض جميع تاسكات عضو معين
     path('team-members/<str:member_id>/tasks/', MemberTaskListView.as_view(), name='member-task-list'),
+    #         عرض جميع التاسكات المسندة لمستخدم معين عن طريق user id
+    path('user-tasks/<str:user_id>/', UserAssignedTasksView.as_view(), name='user-assigned-tasks'),
 
 ]
 
@@ -48,3 +52,6 @@ urlpatterns = [
 # http://127.0.0.1:8000/team/teams/tasks/ ظهور جميع الفرق
 # http://127.0.0.1:8000/team/team-members/ ظهور جميع الاعضاء للفرق
 # http://127.0.0.1:8000/team/team-members/<member_id>/tasks/  ظهور مهام عن طريق id العضو
+
+#http://127.0.0.1:8000/team/user-tasks/677d185b476e52d157985e5a/    عرض جميع التاسكات المسندة لمستخدم معين عن طريق user id
+
